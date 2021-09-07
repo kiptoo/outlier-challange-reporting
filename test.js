@@ -8,17 +8,10 @@ const redis = require('./redis')
 const knex = require('./db')
 const server = require('./server')
 const { promisify } = require('util')
-const request = require('request')
-const { fetchJson, Healthpool } = require('./fetchjson')
-const redisMulti = redis.multi()
-const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
-const hscan = promisify(redis.hscan).bind(redis)
-const hget = promisify(redis.hget).bind(redis)
-const get = promisify(redis.get).bind(redis)
-const hset = promisify(redis.hset).bind(redis)
-const smembers = promisify(redis.smembers).bind(redis)
-const flushdb = promisify(redis.flushdb).bind(redis)
 const config = require('./config')
+
+const flushdb = promisify(redis.flushdb).bind(redis)
+
 if (config.test == true) {
   redis.select(1)
 } else {

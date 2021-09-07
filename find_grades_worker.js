@@ -1,24 +1,15 @@
-// add this script in myWorker.js file
-const { parentPort, workerData } = require('worker_threads')
-const { Worker } = require('worker_threads')
-const { StaticPool } = require('node-worker-threads-pool')
+
+const { parentPort } = require('worker_threads')
+const { promisify } = require('util')
 const redis = require('./redis')
 const config = require('./config')
+const get = promisify(redis.get).bind(redis)
+const hset = promisify(redis.hset).bind(redis)
 if (config.test == true) {
   redis.select(1)
 } else {
   redis.select(0)
 }
-const { promisify } = require('util')
-const request = require('request')
-const { fetchJson, Healthpool } = require('./fetchjson')
-const redisMulti = redis.multi()
-const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
-const hscan = promisify(redis.hscan).bind(redis)
-const hget = promisify(redis.hget).bind(redis)
-const get = promisify(redis.get).bind(redis)
-const hset = promisify(redis.hset).bind(redis)
-const smembers = promisify(redis.smembers).bind(redis)
 
 parentPort.on('message', async data => {
   const responseData = await searchStudentGrades(data.currentStudent)

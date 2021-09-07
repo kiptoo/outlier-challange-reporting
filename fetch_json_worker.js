@@ -1,27 +1,19 @@
 const axios = require('axios')
-const { Worker } = require('worker_threads')
-const hyperquest = require('hyperquest')
-const JSONStream = require('JSONStream')
-const es = require('event-stream')
+const { parentPort } = require('worker_threads')
 const redis = require('./redis')
 const { promisify } = require('util')
-// Create new worker
-const { StaticPool } = require('node-worker-threads-pool')
 const config = require('./config')
+const redisMulti = redis.multi()
+const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
 if (config.test) {
   redis.select(1)
 } else {
   redis.select(0)
 }
-const redisMulti = redis.multi()
-const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
-const keyexist = promisify(redis.exists).bind(redis)
-const flushdb = promisify(redis.flushdb).bind(redis)
-const get = promisify(redis.get).bind(redis)
-const { parentPort, workerData } = require('worker_threads')
 let Grades = []
 const courseListAll = []
 const SumcourseListAll = []
+
 parentPort.on('message', async data => {
   const resdata = await pushJsonData(data.studentId)
   parentPort.postMessage({ results: resdata })

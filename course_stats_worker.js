@@ -1,12 +1,5 @@
-// add this script in myWorker.js file
-const { parentPort, workerData } = require('worker_threads')
-const axios = require('axios')
-const { Worker } = require('worker_threads')
-const hyperquest = require('hyperquest')
-const JSONStream = require('JSONStream')
-const es = require('event-stream')
-// Create new worker
-const { StaticPool } = require('node-worker-threads-pool')
+
+const { parentPort } = require('worker_threads')
 const redis = require('./redis')
 const config = require('./config')
 if (config.test == true) {
@@ -15,13 +8,12 @@ if (config.test == true) {
   redis.select(0)
 }
 const { promisify } = require('util')
-const request = require('request')
-const { fetchJson, Healthpool } = require('./fetchjson')
+
 const redisMulti = redis.multi()
 const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
-const hscan = promisify(redis.hscan).bind(redis)
+
 const hget = promisify(redis.hget).bind(redis)
-const get = promisify(redis.get).bind(redis)
+
 const hset = promisify(redis.hset).bind(redis)
 const smembers = promisify(redis.smembers).bind(redis)
 

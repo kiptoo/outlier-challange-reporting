@@ -1,8 +1,4 @@
-const axios = require('axios')
-const { Worker } = require('worker_threads')
-const hyperquest = require('hyperquest')
-const JSONStream = require('JSONStream')
-const es = require('event-stream')
+
 const redis = require('./redis')
 
 const { promisify } = require('util')
@@ -14,16 +10,9 @@ if (config.test == true) {
 } else {
   redis.select(0)
 }
-const redisMulti = redis.multi()
-const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
+
 const keyexist = promisify(redis.exists).bind(redis)
 const flushdb = promisify(redis.flushdb).bind(redis)
-const get = promisify(redis.get).bind(redis)
-// const pipeline =redis.pipeline();
-
-const Grades = []
-const courseListAll = []
-const SumcourseListAll = []
 
 fetchJsonPoll = new StaticPool({
   size: 1,

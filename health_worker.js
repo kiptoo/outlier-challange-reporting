@@ -1,5 +1,5 @@
-// add this script in myWorker.js file
-const { parentPort, workerData } = require('worker_threads')
+
+const { parentPort } = require('worker_threads')
 const redis = require('./redis')
 const config = require('./config')
 if (config.test == true) {

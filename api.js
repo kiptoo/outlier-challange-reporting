@@ -1,11 +1,5 @@
 require('dotenv').config()
 const knex = require('./db')
-const axios = require('axios')
-const { Worker } = require('worker_threads')
-const hyperquest = require('hyperquest')
-const JSONStream = require('JSONStream')
-const es = require('event-stream')
-// Create new worker
 const { StaticPool } = require('node-worker-threads-pool')
 const config = require('./config')
 const redis = require('./redis')
@@ -15,15 +9,11 @@ if (config.test == true) {
   redis.select(0)
 }
 const { promisify } = require('util')
-const request = require('request')
-const { fetchJson, Healthpool } = require('./fetchjson')
-const redisMulti = redis.multi()
-const execMultiAsync = promisify(redisMulti.exec).bind(redisMulti)
-const hscan = promisify(redis.hscan).bind(redis)
+
+const { fetchJson } = require('./fetchjson')
+
 const hget = promisify(redis.hget).bind(redis)
-const get = promisify(redis.get).bind(redis)
-const hset = promisify(redis.hset).bind(redis)
-const smembers = promisify(redis.smembers).bind(redis)
+
 fetchJson()
 
 module.exports = {
